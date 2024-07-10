@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+  jenkins:
+    image: jenkins/jenkins
+    container_name: jenkins
+    ports:
+      - 10240:8080
+      - 10241:50000
+    volumes:
+      - /usr/local/docker/jenkins/jenkins_home/jenkins_home:/var/jenkins_home
+      - /etc/localtime:/etc/localtime
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/software/jdk1.8.0_202:/usr/local/jdk
+      - /usr/local/software/apache_maven_3.9.6:/usr/local/maven
+      - /var/bin/docker:/usr/bin/docker
+    networks:
+      - cicd
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    ports:
+      - 7080:80
+      - 2222:22
+    volumes:
+      - /usr/local/docker/gitlab/config:/etc/gitlab
+      - /usr/local/docker/gitlab/logs:/var/log/gitlab
+      - /usr/local/docker/gitlab/data:/var/opt/gitlab
+    networks:
+      - cicd
+networks:
+  cicd:
+    driver: bridge

@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    container_name: elk_elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - /usr/local/docker/elk/volume/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /usr/local/docker/elk/volume/data:/usr/share/elasticsearch/data
+      - /usr/local/docker/elk/volume/plugins:/usr/share/elasticsearch/plugins
+    networks:
+      - elk_network
+  kibana:
+    image: kibana:7.17.0
+    container_name: elk_kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    volumes:
+      - /usr/local/docker/elk/volume/kibanaconfig:/usr/share/kibana/config
+      - /usr/local/docker/elk/volume/kibanadata:/usr/share/kibana/data
+    networks:
+      - elk_network
+  logstash:
+    image: logstash:7.17.0
+    container_name: elk_logstash
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    volumes:
+      - /usr/local/docker/elk/volume/logstash/config:/usr/share/logstash/config
+    networks:
+      - elk_network
+networks:
+  elk_network:
+    driver: bridge

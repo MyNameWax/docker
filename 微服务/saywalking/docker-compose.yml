@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  elasticsearch:
+    image: elasticsearch
+    container_name: elasticsearch
+    restart: always
+    privileged: true
+    hostname: elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:300
+    environment:
+      - d
